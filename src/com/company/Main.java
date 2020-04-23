@@ -1,6 +1,8 @@
 package com.company;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class Main {
@@ -8,7 +10,7 @@ public class Main {
     Main project1 = new Main();
 
     //Database  connection variables
-    static Connection connection = null;
+    static Connection connection;
     static String databaseNAme = "StudentDatabase";
     static String url = "jdbc:mysql://localhost:3306/StudentDatabase?useSSL=false=&serverTimezone=UTC";
 
@@ -24,6 +26,7 @@ public class Main {
 //        PreparedStatement ps = connection.prepareStatement("INSERT INTO Student (name) VALUES ('Dorota clark')");
         Statement stmt = connection.createStatement();
         selectData(stmt);
+        createTable();
 
 
         new DBclass().setVisible(true);
@@ -38,5 +41,22 @@ public class Main {
             System.out.println("id: " + id + " name: " + name);
         }
     }
+
+    public static void createTable() {
+
+        try {
+            String q = "CREATE TABLE `StudentDatabase`.`workers` (`wname` VARCHAR(100) NULL,`wage` INT NULL)";
+            Statement statement = connection.createStatement();
+            statement.execute(q);
+            System.out.println("Table Created");
+            statement.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+
 }
 

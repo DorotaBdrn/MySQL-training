@@ -33,6 +33,12 @@ public class DBclass extends JFrame implements ActionListener {
     public JTextArea studentName;
     public JTextArea teacherName;
 
+    public JButton update;
+    public JButton edit;
+    public JTextField updateStudentName;
+    public JTextField updateTeacherNameInput;
+    public JTextField updateTeacherID;
+
 
     //    public static void main(String[] args) {
 //
@@ -93,7 +99,48 @@ public class DBclass extends JFrame implements ActionListener {
         add(teacherNameInput);
         jPanel.add(refresh);
         add(insert);
+
+        update = new JButton("update");
+        edit = new JButton("Edit");
+        updateStudentName = new JTextField(10);
+        updateTeacherNameInput = new JTextField(10);
+        updateTeacherID = new JTextField(5);
+
+
+        add(update);
+        add(edit);
+        add(updateStudentName);
+        add(teacherNameInput);
+        add(updateTeacherNameInput);
+        add(updateTeacherID);
+        update.addActionListener(this);
+        edit.addActionListener(this::actionPerformed2);
+
     }
+
+    public void actionPerformed3(ActionEvent event) {
+    }
+
+
+    public void actionPerformed2(ActionEvent event) {
+
+        String[] columns1 = {"idTeachers", "TeacherName"};
+        String[][] data1 = {};
+        DefaultTableModel tableModel = new DefaultTableModel(data1, columns1);
+//        jt.setModel(tableModel);
+        jt.getModel();
+
+        int row = jt.getSelectedRow();
+
+        String idTeachers = jt.getValueAt(row, 0).toString();
+        String TeacherName = jt.getValueAt(row, 1).toString();
+        updateTeacherID.setText(idTeachers);
+        updateTeacherNameInput.setText(TeacherName);
+        System.out.println(idTeachers + " " + TeacherName);
+
+
+    }
+
 
     @Override
     public void actionPerformed(ActionEvent event) {
