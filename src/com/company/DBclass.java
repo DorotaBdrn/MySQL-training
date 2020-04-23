@@ -2,16 +2,12 @@ package com.company;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static java.awt.FlowLayout.*;
 
 public class DBclass extends JFrame implements ActionListener {
 
@@ -23,15 +19,14 @@ public class DBclass extends JFrame implements ActionListener {
     static String password = "root";
 
 
-    public JButton insert;
+    public JButton insertStudent;
+    public JButton insertTeacher;
     public JTextField input;
     public JTextField teacherNameInput;
 
     public JButton refresh;
     public JPanel jPanel;
     public JTable jt;
-    public JTextArea studentName;
-    public JTextArea teacherName;
 
     public JButton update;
     public JButton edit;
@@ -47,6 +42,7 @@ public class DBclass extends JFrame implements ActionListener {
 //    }
     public DBclass() {
         super("DataBase");
+
         setTitle("school");
         createConnection();
         setSize(600, 600);
@@ -66,13 +62,15 @@ public class DBclass extends JFrame implements ActionListener {
 //        jPanel.add(jt);
 
 
-        insert = new JButton("insert");
-        studentName = new JTextArea("Student Name");
+        insertStudent = new JButton("Add Student");
+        insertTeacher = new JButton("Add Teacher");
         input = new JTextField(10);
-        teacherName = new JTextArea("Teacher Name");
         teacherNameInput = new JTextField(10);
-        teacherName.setBackground(Color.yellow);
-        studentName.setBackground(Color.blue);
+        insertStudent.setBackground(Color.yellow);
+        insertTeacher.setBackground(Color.blue);
+        input.setBackground(Color.yellow);
+        teacherNameInput.setBackground(Color.blue);
+        insertTeacher.getMargin();
 
 
         String[] columns1 = {"idTeachers", "TeacherName"};
@@ -89,36 +87,51 @@ public class DBclass extends JFrame implements ActionListener {
 
         refresh = new JButton("refresh");
 
-        insert.addActionListener(this);
+        insertStudent.addActionListener(this);
+        insertTeacher.addActionListener(this);
         refresh.addActionListener(this::actionPerformed1);
 
 
-        add(studentName);
-        add(input);
-        add(teacherName);
         add(teacherNameInput);
+        add(insertTeacher);
         jPanel.add(refresh);
-        add(insert);
+        add(insertStudent);
+        add(input);
 
         update = new JButton("update");
         edit = new JButton("Edit");
         updateStudentName = new JTextField(10);
         updateTeacherNameInput = new JTextField(10);
         updateTeacherID = new JTextField(5);
+        update.setLocation(100, 100);
+        update.getMargin();
 
 
-        add(update);
-        add(edit);
-        add(updateStudentName);
-        add(teacherNameInput);
+        //add(teacherNameInput);
         add(updateTeacherNameInput);
         add(updateTeacherID);
-        update.addActionListener(this);
+        update.addActionListener(this::actionPerformed3);
         edit.addActionListener(this::actionPerformed2);
-
+        add(update);
+        add(edit);
+        //add(updateStudentName);
     }
 
     public void actionPerformed3(ActionEvent event) {
+
+        try {
+            int id = Integer.parseInt(updateTeacherID.getText());
+            PreparedStatement statement = connection.prepareStatement("update Teachers set TeacherName =  ?  where idTeachers = ? ");
+            statement.setString(1, updateTeacherNameInput.getText());
+            statement.setInt(2, id);
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Updated");
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 
@@ -147,7 +160,7 @@ public class DBclass extends JFrame implements ActionListener {
 
 
         try {
-            if (event.getActionCommand().equals("studentName")) {
+            if (event.getActionCommand().equals("Add Student")) {
                 String name = input.getText();
                 System.out.println(name);
                 PreparedStatement statement = connection.prepareStatement(" INSERT INTO Student (name) VALUES(?)");
@@ -156,10 +169,11 @@ public class DBclass extends JFrame implements ActionListener {
 //            String dbop = " INSERT INTO Student (name) VALUES ('" + name + "')";
                 statement.execute();
                 statement.close();
-            } else if (event.getActionCommand().equals("teacherName")) {
+            } else if (event.getActionCommand().equals("Add Teacher")) {
                 String teacherName = teacherNameInput.getText();
                 PreparedStatement statement2 = connection.prepareStatement(" INSERT INTO Teachers (teacherName) VALUES(?)");
                 statement2.setString(1, teacherName);
+                System.out.println(teacherName);
                 statement2.execute();
                 statement2.close();
 
