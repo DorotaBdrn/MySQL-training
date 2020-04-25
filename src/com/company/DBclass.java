@@ -25,6 +25,7 @@ public class DBclass extends JFrame implements ActionListener {
     public JTextField teacherNameInput;
 
     public JButton refresh;
+    public JButton delete;
     public JPanel jPanel;
     public JTable jt;
 
@@ -55,6 +56,7 @@ public class DBclass extends JFrame implements ActionListener {
 
 
         refresh = new JButton("refresh");
+        delete = new JButton("delete");
         jPanel = new JPanel();
         add(jPanel);
 
@@ -77,12 +79,13 @@ public class DBclass extends JFrame implements ActionListener {
         String[][] data1 = {};
 
         jt = new JTable(data1, columns1);
-        jt.setPreferredScrollableViewportSize(new Dimension(470, 65));
+        jt.setPreferredScrollableViewportSize(new Dimension(450, 65));
         jt.setFillsViewportHeight(true);
 
 
         JScrollPane jScrollPane = new JScrollPane(jt);
         jPanel.add(jScrollPane);
+
 
 
         refresh = new JButton("refresh");
@@ -95,13 +98,14 @@ public class DBclass extends JFrame implements ActionListener {
         add(teacherNameInput);
         add(insertTeacher);
         jPanel.add(refresh);
+        jPanel.add(delete);
         add(insertStudent);
         add(input);
 
         update = new JButton("update");
         edit = new JButton("Edit");
-        updateStudentName = new JTextField(10);
-        updateTeacherNameInput = new JTextField(10);
+        updateStudentName = new JTextField(12);
+        updateTeacherNameInput = new JTextField(12);
         updateTeacherID = new JTextField(5);
         update.setLocation(100, 100);
         update.getMargin();
@@ -112,9 +116,29 @@ public class DBclass extends JFrame implements ActionListener {
         add(updateTeacherID);
         update.addActionListener(this::actionPerformed3);
         edit.addActionListener(this::actionPerformed2);
+        delete.addActionListener(this::actionPerformed4);
         add(update);
         add(edit);
         //add(updateStudentName);
+    }
+
+    private void actionPerformed4(ActionEvent event) {
+        try {
+            int row = jt.getSelectedRow();
+            String name = jt.getValueAt(row, 1).toString();
+            String sqlt = "delete from Teachers where TeacherName = ?";
+            PreparedStatement statement = connection.prepareStatement(sqlt);
+            statement.setString(1, name);
+            statement.executeUpdate();
+            System.out.println("Done");
+            statement.close();
+
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
     }
 
     public void actionPerformed3(ActionEvent event) {
@@ -195,7 +219,7 @@ public class DBclass extends JFrame implements ActionListener {
 
 
         try {
-            System.out.println("Hello");
+
             Statement stmt = connection.createStatement();
             ResultSet resultSet = stmt.executeQuery("SELECT * from Teachers");
             while (resultSet.next()) {
