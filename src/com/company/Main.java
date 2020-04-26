@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.company.DBclass.callableExample;
+
 public class Main {
 
     Main project1 = new Main();
@@ -29,6 +31,8 @@ public class Main {
 
 
         new DBclass().setVisible(true);
+        System.out.println("This is Stored procedure: \n");
+        callableExample();
 
     }
 

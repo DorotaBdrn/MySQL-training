@@ -141,6 +141,25 @@ public class DBclass extends JFrame implements ActionListener {
 
     }
 
+    public static void callableExample() {
+
+        try {
+            CallableStatement statement = connection.prepareCall("{call simple()}");
+            Boolean hasResult = statement.execute();
+            if (hasResult) {
+                ResultSet resultSet = statement.getResultSet();
+
+                while (resultSet.next()) {
+                    System.out.println(resultSet.getString("TeacherName"));
+                }
+            }
+            statement.close();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public void actionPerformed3(ActionEvent event) {
 
         try {
